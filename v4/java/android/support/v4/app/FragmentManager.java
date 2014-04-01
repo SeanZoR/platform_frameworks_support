@@ -902,7 +902,13 @@ final class FragmentManagerImpl extends FragmentManager {
                                 f.mSavedFragmentState), null, f.mSavedFragmentState);
                         if (f.mView != null) {
                             f.mInnerView = f.mView;
-                            f.mView = NoSaveStateFrameLayout.wrap(f.mView);
+                            
+                            // This is the performance fix. If we are running on versions that already has
+                            // the SaveState inside them - simply don't re-wrap them
+                            if (android.os.Build.VERSION.SDK_INT > 10){
+                                f.mView = NoSaveStateFrameLayout.wrap(f.mView);
+                            }
+                            
                             if (f.mHidden) f.mView.setVisibility(View.GONE);
                             f.onViewCreated(f.mView, f.mSavedFragmentState);
                         } else {
@@ -929,7 +935,13 @@ final class FragmentManagerImpl extends FragmentManager {
                                     f.mSavedFragmentState), container, f.mSavedFragmentState);
                             if (f.mView != null) {
                                 f.mInnerView = f.mView;
-                                f.mView = NoSaveStateFrameLayout.wrap(f.mView);
+                                
+                                // This is the performance fix. If we are running on versions that already has
+                                // the SaveState inside them - simply don't re-wrap them
+                                if (android.os.Build.VERSION.SDK_INT > 10){
+                                    f.mView = NoSaveStateFrameLayout.wrap(f.mView);
+                                }                   
+                                
                                 if (container != null) {
                                     Animation anim = loadAnimation(f, transit, true,
                                             transitionStyle);
